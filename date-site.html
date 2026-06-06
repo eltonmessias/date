@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EM · 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,serif;}
+
+/* PAGES */
+.page{position:fixed;inset:0;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .7s ease,transform .7s ease;transform:translateY(20px);}
+.page.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.page.exit-up{opacity:0;transform:translateY(-20px);}
+.page.exit-down{opacity:0;transform:translateY(20px);}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,6,.92);backdrop-filter:blur(8px);border-bottom:1px solid #1a1915;}
+.nav-logo{font-family:'DM Mono',monospace;font-size:.6rem;color:#4a4540;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s;}
+.nav-logo:hover{color:#8a7a60;}
+.nav-links{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;}
+.nav-link{font-family:'DM Mono',monospace;font-size:.58rem;color:#4a4540;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:color .25s;background:none;border:none;padding:0;}
+.nav-link:hover,.nav-link.active{color:#c8c4bc;}
+.nav-sair{font-family:'DM Mono',monospace;font-size:.55rem;color:#3a3530;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:1px solid #2a2520;padding:.3rem .8rem;transition:all .25s;}
+.nav-sair:hover{color:#8a4a3a;border-color:#5a3030;}
+
+/* LOCK PAGE */
+#page-lock{background:#080806;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+#page-lock::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 40% 40%,rgba(138,122,96,.06) 0%,transparent 65%);pointer-events:none;}
+.lock-glyph{font-family:'DM Mono',monospace;font-size:1.1rem;color:#2a2520;letter-spacing:.5em;margin-bottom:3rem;animation:pulse 4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+.lock-title{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:300;font-style:italic;color:#e8e4dc;text-align:center;line-height:1.25;margin-bottom:.6rem;}
+.lock-sub{font-family:'DM Mono',monospace;font-size:.65rem;color:#3a3530;letter-spacing:.2em;text-align:center;margin-bottom:3.5rem;text-transform:uppercase;}
+.pwd-wrap{display:flex;flex-direction:column;align-items:center;gap:.9rem;width:100%;max-width:300px;}
+.pwd-input{width:100%;background:transparent;border:none;border-bottom:1px solid #2a2520;padding:.8rem 0;color:#e8e4dc;font-family:'DM Mono',monospace;font-size:.85rem;letter-spacing:.3em;text-align:center;outline:none;transition:border-color .3s;}
+.pwd-input:focus{border-bottom-color:#8a7a60;}
+.pwd-input::placeholder{color:#2a2520;letter-spacing:.1em;}
+.pwd-btn{background:transparent;border:1px solid #2a2520;color:#5a5248;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:.7rem 2.5rem;cursor:pointer;transition:all .3s;margin-top:.3rem;}
+.pwd-btn:hover{border-color:#8a7a60;color:#e8e4dc;}
+.pwd-err{font-family:'DM Mono',monospace;font-size:.6rem;color:#7a3a2a;letter-spacing:.1em;opacity:0;transition:opacity .3s;height:.8rem;}
+.pwd-err.show{opacity:1;}
+
+/* HOME PAGE */
+#page-home{background:#080806;}
+#page-home::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(138,122,96,.05) 0%,transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(100,90,70,.04) 0%,transparent 50%);pointer-events:none;}
+.home-wrap{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:5rem 2.5rem 3rem;max-width:720px;margin:0 auto;}
+.home-eyebrow{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.25em;text-transform:uppercase;margin-bottom:2.5rem;display:flex;align-items:center;gap:1rem;}
+.home-eyebrow::before{content:'';flex:0 0 30px;height:1px;background:#2a2520;}
+.home-heading{font-size:clamp(2.8rem,7vw,5rem);font-weight:300;font-style:italic;line-height:1.1;color:#e8e4dc;margin-bottom:1rem;}
+.home-heading .gold{color:#8a7a60;}
+.home-heading .dim{color:#3a3530;}
+.home-sub{font-family:'DM Mono',monospace;font-size:.62rem;color:#4a4540;letter-spacing:.15em;text-transform:uppercase;margin-bottom:3.5rem;}
+.home-intro{font-size:1.15rem;font-weight:300;line-height:1.95;color:#8a8278;max-width:480px;margin-bottom:4rem;}
+.home-intro em{font-style:italic;color:#c8c4bc;}
+.home-nav-btns{display:flex;flex-direction:column;gap:.8rem;max-width:320px;}
+.hn-btn{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.4rem;border:1px solid #1e1d1a;cursor:pointer;transition:all .35s;background:transparent;text-align:left;width:100%;}
+.hn-btn:hover{border-color:#4a4540;background:rgba(138,122,96,.03);}
+.hn-btn:hover .hn-arrow{transform:translateX(4px);}
+.hn-label{font-family:'DM Mono',monospace;font-size:.62rem;color:#4a4540;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:.25rem;}
+.hn-title{font-size:1.1rem;font-style:italic;color:#c8c4bc;}
+.hn-arrow{color:#3a3530;font-family:'DM Mono',monospace;font-size:.8rem;transition:transform .3s;}
+.home-stamp{margin-top:5rem;font-family:'DM Mono',monospace;font-size:.55rem;color:#2a2520;letter-spacing:.15em;display:flex;align-items:center;gap:1rem;}
+.home-stamp::after{content:'';flex:1;height:1px;background:#1a1915;}
+
+/* CARTA PAGE */
+#page-carta{background:#080806;}
+.carta-wrap{max-width:640px;margin:0 auto;padding:7rem 2.5rem 6rem;}
+.carta-date-tag{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.2em;text-transform:uppercase;margin-bottom:3.5rem;display:flex;align-items:center;gap:1.5rem;}
+.carta-date-tag::before{content:'';width:20px;height:1px;background:#2a2520;}
+.carta-heading{font-size:clamp(2rem,5vw,3.2rem);font-weight:300;font-style:italic;line-height:1.2;color:#e8e4dc;margin-bottom:3.5rem;}
+.carta-heading span{color:#8a7a60;}
+.carta-body{font-size:1.18rem;font-weight:300;line-height:2;color:#8a8278;margin-bottom:2rem;}
+.carta-body em{color:#c8c4bc;font-style:italic;}
+.carta-pull{border-left:1px solid #2a2520;padding:1.2rem 1.8rem;margin:3rem 0;position:relative;}
+.carta-pull::before{content:'';position:absolute;left:-1px;top:0;width:1px;height:40%;background:#8a7a60;}
+.carta-pull p{font-size:1.3rem;font-style:italic;font-weight:300;color:#c8c4bc;line-height:1.7;}
+.carta-sig{margin-top:5rem;display:flex;align-items:baseline;gap:1.5rem;}
+.carta-sig-line{flex:1;height:1px;background:#1a1915;}
+.carta-sig-name{font-size:1.4rem;font-style:italic;color:#5a5248;}
+.carta-cta{margin-top:3.5rem;display:inline-flex;align-items:center;gap:1rem;padding:1rem 1.6rem;border:1px solid #2a2520;cursor:pointer;transition:all .35s;background:transparent;font-family:'Cormorant Garamond',Georgia,serif;}
+.carta-cta:hover{border-color:#8a7a60;background:rgba(138,122,96,.04);}
+.carta-cta span{font-size:1rem;font-style:italic;color:#8a7a60;}
+.carta-cta small{font-family:'DM Mono',monospace;font-size:.6rem;color:#3a3530;letter-spacing:.15em;}
+
+/* CONTACTO PAGE */
+#page-contacto{background:#080806;}
+.contacto-wrap{max-width:640px;margin:0 auto;padding:7rem 2.5rem 6rem;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+.contacto-eyebrow{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.25em;text-transform:uppercase;margin-bottom:2rem;}
+.contacto-heading{font-size:clamp(2rem,5vw,3rem);font-weight:300;font-style:italic;color:#e8e4dc;line-height:1.2;margin-bottom:4rem;}
+.contacto-heading span{color:#8a7a60;}
+.c-item{display:flex;align-items:flex-start;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid #141412;}
+.c-icon{font-family:'DM Mono',monospace;font-size:.6rem;color:#2a2520;letter-spacing:.1em;min-width:70px;padding-top:.3rem;text-transform:uppercase;}
+.c-val{font-size:1.25rem;font-style:italic;color:#c8c4bc;}
+.c-note{font-family:'DM Mono',monospace;font-size:.58rem;color:#2a2520;letter-spacing:.1em;margin-top:.3rem;}
+.contacto-footer{margin-top:4rem;font-family:'DM Mono',monospace;font-size:.55rem;color:#2a2520;letter-spacing:.1em;line-height:1.8;}
+
+/* PLANNER PAGE */
+#page-planner{background:#080806;}
+.planner-wrap{max-width:680px;margin:0 auto;padding:6rem 2rem 5rem;}
+.pl-eyebrow{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.25em;text-transform:uppercase;margin-bottom:1.5rem;}
+.pl-heading{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;font-style:italic;color:#e8e4dc;margin-bottom:.4rem;}
+.pl-heading span{color:#8a7a60;}
+.pl-sub{font-family:'DM Mono',monospace;font-size:.58rem;color:#2a2520;letter-spacing:.15em;margin-bottom:3rem;}
+.pl-section{margin-bottom:2.5rem;}
+.pl-label{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
+.pl-label::after{content:'';flex:1;height:1px;background:#141412;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.cal-month{font-size:1rem;font-style:italic;color:#8a8278;}
+.cal-arr{background:transparent;border:none;color:#3a3530;font-size:1rem;cursor:pointer;padding:.2rem .6rem;font-family:'DM Mono',monospace;transition:color .2s;}
+.cal-arr:hover{color:#8a7a60;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-dn{font-family:'DM Mono',monospace;font-size:.52rem;color:#2a2520;text-align:center;padding:.35rem 0;text-transform:uppercase;}
+.cal-day{font-family:'DM Mono',monospace;font-size:.72rem;color:#3a3530;text-align:center;padding:.5rem .1rem;cursor:pointer;border:1px solid transparent;transition:all .2s;border-radius:1px;}
+.cal-day:hover{color:#c8c4bc;border-color:#2a2520;}
+.cal-day.sel{background:#8a7a60;color:#080806;border-color:#8a7a60;}
+.cal-day.tod{color:#8a7a60;}
+.cal-day.emp,.cal-day.past{cursor:default;color:#1a1915;border-color:transparent;}
+.time-slots{display:flex;flex-wrap:wrap;gap:.4rem;}
+.t-slot{font-family:'DM Mono',monospace;font-size:.68rem;color:#3a3530;border:1px solid #1e1d1a;padding:.4rem .85rem;cursor:pointer;transition:all .2s;}
+.t-slot:hover{color:#c8c4bc;border-color:#3a3530;}
+.t-slot.sel{background:#8a7a60;color:#080806;border-color:#8a7a60;}
+.cat-tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.2rem;}
+.c-tab{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;border:1px solid #1e1d1a;padding:.3rem .85rem;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.1em;}
+.c-tab:hover{color:#c8c4bc;border-color:#3a3530;}
+.c-tab.act{border-color:#8a7a60;color:#8a7a60;}
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.7rem;}
+.pl-card{border:1px solid #1e1d1a;cursor:pointer;transition:all .25s;overflow:hidden;position:relative;}
+.pl-card:hover{border-color:#3a3530;}
+.pl-card.sel{border-color:#8a7a60;}
+.pl-card.sel::after{content:'✓';position:absolute;top:.35rem;right:.45rem;font-family:'DM Mono',monospace;font-size:.65rem;color:#8a7a60;background:#080806;padding:0 .2rem;}
+.pl-img{width:100%;height:80px;object-fit:cover;display:block;filter:grayscale(60%) brightness(.7);transition:filter .3s;}
+.pl-card:hover .pl-img,.pl-card.sel .pl-img{filter:grayscale(20%) brightness(.9);}
+.pl-name{font-family:'DM Mono',monospace;font-size:.6rem;color:#8a7a60;padding:.45rem .55rem .1rem;letter-spacing:.08em;}
+.pl-desc{font-size:.8rem;font-style:italic;color:#3a3530;padding:0 .55rem .45rem;line-height:1.3;}
+.comment-ta{width:100%;background:transparent;border:1px solid #1e1d1a;color:#c8c4bc;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-style:italic;padding:.9rem 1rem;outline:none;resize:none;min-height:80px;transition:border-color .3s;line-height:1.7;}
+.comment-ta:focus{border-color:#3a3530;}
+.comment-ta::placeholder{color:#2a2520;font-style:italic;}
+.summary{margin-top:2rem;padding:1.4rem;background:rgba(138,122,96,.04);border:1px solid #1e1d1a;display:none;}
+.summary.vis{display:block;}
+.sum-lbl{font-family:'DM Mono',monospace;font-size:.55rem;color:#3a3530;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem;}
+.sum-line{font-size:.95rem;color:#8a8278;margin-bottom:.35rem;font-style:italic;}
+.sum-line span{color:#8a7a60;}
+.conf-btn{margin-top:1.4rem;width:100%;background:transparent;border:1px solid #8a7a60;color:#8a7a60;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:.8rem;cursor:pointer;transition:all .3s;}
+.conf-btn:hover{background:#8a7a60;color:#080806;}
+.conf-btn:disabled{opacity:.3;cursor:not-allowed;}
+.confirmed{display:none;text-align:center;padding:3rem 1rem;}
+.confirmed.vis{display:block;}
+.confirmed h3{font-size:2rem;font-style:italic;font-weight:300;color:#e8e4dc;margin-bottom:1rem;line-height:1.4;}
+.confirmed p{font-size:.9rem;font-style:italic;color:#5a5248;margin-bottom:.4rem;}
+.confirmed small{font-family:'DM Mono',monospace;font-size:.55rem;color:#2a2520;letter-spacing:.1em;}
+
+/* ADMIN */
+#page-admin{background:#080806;}
+.admin-wrap{max-width:520px;margin:0 auto;padding:7rem 2rem 5rem;}
+.admin-title{font-size:1.8rem;font-style:italic;font-weight:300;color:#e8e4dc;margin-bottom:.3rem;}
+.admin-sub{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.15em;text-transform:uppercase;margin-bottom:2.5rem;}
+.b-card{border:1px solid #1e1d1a;padding:1.4rem;margin-bottom:.8rem;}
+.b-row{display:flex;gap:1rem;margin-bottom:.5rem;align-items:baseline;}
+.b-lbl{font-family:'DM Mono',monospace;font-size:.55rem;color:#3a3530;letter-spacing:.15em;text-transform:uppercase;min-width:75px;}
+.b-val{font-size:1rem;font-style:italic;color:#c8c4bc;line-height:1.5;}
+.b-comment{font-size:.95rem;font-style:italic;color:#8a7a60;line-height:1.6;margin-top:.3rem;border-left:1px solid #8a7a60;padding-left:.8rem;}
+.b-time{font-family:'DM Mono',monospace;font-size:.55rem;color:#2a2520;margin-top:.8rem;}
+.b-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#8a7a60;margin-right:.4rem;vertical-align:middle;}
+.admin-empty{font-family:'DM Mono',monospace;font-size:.7rem;color:#2a2520;letter-spacing:.1em;text-align:center;padding:3rem 0;}
+
+/* ANIMATIONS */
+.fade-in{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s ease;}
+.fade-in.in{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav" style="display:none;">
+  <span class="nav-logo" onclick="goTo('home')">EM · 2025</span>
+  <div class="nav-links">
+    <button class="nav-link" onclick="goTo('home')">início</button>
+    <button class="nav-link" onclick="goTo('carta')">carta</button>
+    <button class="nav-link" onclick="goTo('planner')">encontro</button>
+    <button class="nav-link" onclick="goTo('contacto')">contacto</button>
+    <button class="nav-sair" onclick="sair()">← sair</button>
+  </div>
+</nav>
+
+<!-- PAGE: LOCK -->
+<div class="page active" id="page-lock">
+  <div style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;">
+    <div class="lock-glyph">· · · · ·</div>
+    <h1 class="lock-title">Esta página foi criada<br>para uma pessoa.</h1>
+    <p class="lock-sub">Se tens a chave, entra.</p>
+    <div class="pwd-wrap">
+      <input type="password" class="pwd-input" id="pwd" placeholder="palavra-passe" autocomplete="off"/>
+      <p class="pwd-err" id="pwd-err">chave incorrecta. tenta outra vez.</p>
+      <button class="pwd-btn" onclick="checkPwd()">entrar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: HOME -->
+<div class="page" id="page-home">
+  <div class="home-wrap">
+    <div class="home-eyebrow fade-in">03 de Junho, 2025 · 16h00 · Faculdade</div>
+    <h1 class="home-heading fade-in" style="transition-delay:.1s">
+      Uma conversa<br>que <span class="gold">não</span> consigo<br><span class="dim">esquecer.</span>
+    </h1>
+    <p class="home-sub fade-in" style="transition-delay:.2s">— Elton Messias · Engenharia Informática</p>
+    <p class="home-intro fade-in" style="transition-delay:.3s">
+      Encontrámo-nos por acaso. Ficámos quase uma hora a falar e no final percebi que <em>aquilo tinha sido especial.</em> Este site é a minha forma de não deixar esse momento perder-se.
+    </p>
+    <div class="home-nav-btns fade-in" style="transition-delay:.4s">
+      <button class="hn-btn" onclick="goTo('carta')">
+        <div><span class="hn-label">// 01</span><span class="hn-title">A carta</span></div>
+        <span class="hn-arrow">→</span>
+      </button>
+      <button class="hn-btn" onclick="goTo('planner')">
+        <div><span class="hn-label">// 02</span><span class="hn-title">Marcar um encontro</span></div>
+        <span class="hn-arrow">→</span>
+      </button>
+      <button class="hn-btn" onclick="goTo('contacto')">
+        <div><span class="hn-label">// 03</span><span class="hn-title">Os meus contactos</span></div>
+        <span class="hn-arrow">→</span>
+      </button>
+    </div>
+    <div class="home-stamp fade-in" style="transition-delay:.55s">Maputo · Junho 2025 · criado especificamente para ti</div>
+  </div>
+</div>
+
+<!-- PAGE: CARTA -->
+<div class="page" id="page-carta">
+  <div class="carta-wrap">
+    <div class="carta-date-tag fade-in">03 · 06 · 2025 — 16h00</div>
+    <h2 class="carta-heading fade-in" style="transition-delay:.1s">
+      Não conseguia<br>parar de <span>pensar</span><br>naquela conversa.
+    </h2>
+    <p class="carta-body fade-in" style="transition-delay:.18s">
+      Era uma tarde de Junho. Encontrámo-nos por acaso — desses acasos que só a faculdade consegue criar — e ficámos quase uma hora a falar. Sobre o mercado de trabalho na área da engenharia. Sobre a realidade do país. Sobre as coisas aleatórias e divertidas que só aparecem quando a conversa é genuína. <em>E foi genuína.</em>
+    </p>
+    <div class="carta-pull fade-in" style="transition-delay:.26s">
+      <p>"Saí dali com aquela sensação rara de ter conhecido alguém que pensa de verdade. Alguém que não fala só do óbvio."</p>
+    </div>
+    <p class="carta-body fade-in" style="transition-delay:.34s">
+      Foste directa, inteligente, e incrivelmente interessante. Surpreendes-te. Tens uma energia que é difícil de explicar em palavras, mas muito fácil de sentir. <em>Não esperava isso. E não me esqueci.</em>
+    </p>
+    <p class="carta-body fade-in" style="transition-delay:.4s">
+      O problema é que este é o meu último ano — não vou com frequência à faculdade e também não tenho muito tempo por causa do trabalho. A hipótese de nos cruzarmos por acaso outra vez é pequena. Por isso decidi fazer o que qualquer engenheiro informático faria na minha situação — <em>construir uma solução.</em>
+    </p>
+    <p class="carta-body fade-in" style="transition-delay:.46s">
+      Não te estou a pedir nada de especial. Só quero que saibas que aquela hora valeu muito. E que seria muito bom continuar isto — <em>com calma, sem pressão, quando quiseres.</em>
+    </p>
+    <div class="carta-sig fade-in" style="transition-delay:.54s">
+      <div class="carta-sig-line"></div>
+      <span class="carta-sig-name">Elton Messias</span>
+    </div>
+    <button class="carta-cta fade-in" style="transition-delay:.62s" onclick="goTo('planner')">
+      <span>Marcar um encontro</span>
+      <small>→</small>
+    </button>
+  </div>
+</div>
+
+<!-- PAGE: PLANNER -->
+<div class="page" id="page-planner">
+  <div class="planner-wrap">
+    <p class="pl-eyebrow fade-in">// 02 — date planner</p>
+    <h2 class="pl-heading fade-in" style="transition-delay:.08s">Planeia o nosso<br><span>encontro.</span></h2>
+    <p class="pl-sub fade-in" style="transition-delay:.14s">escolhe uma data · uma hora · o que te apetece</p>
+
+    <div class="pl-section fade-in" style="transition-delay:.2s">
+      <p class="pl-label">data</p>
+      <div class="cal-nav">
+        <button class="cal-arr" onclick="changeMonth(-1)">←</button>
+        <span class="cal-month" id="cal-month-label"></span>
+        <button class="cal-arr" onclick="changeMonth(1)">→</button>
+      </div>
+      <div class="cal-grid" id="cal-grid">
+        <div class="cal-dn">dom</div><div class="cal-dn">seg</div><div class="cal-dn">ter</div>
+        <div class="cal-dn">qua</div><div class="cal-dn">qui</div><div class="cal-dn">sex</div><div class="cal-dn">sáb</div>
+      </div>
+    </div>
+
+    <div class="pl-section fade-in" style="transition-delay:.28s">
+      <p class="pl-label">hora</p>
+      <div class="time-slots">
+        <div class="t-slot" onclick="selTime(this,'10:00')">10:00</div>
+        <div class="t-slot" onclick="selTime(this,'11:00')">11:00</div>
+        <div class="t-slot" onclick="selTime(this,'12:00')">12:00</div>
+        <div class="t-slot" onclick="selTime(this,'13:00')">13:00</div>
+        <div class="t-slot" onclick="selTime(this,'14:00')">14:00</div>
+        <div class="t-slot" onclick="selTime(this,'15:00')">15:00</div>
+        <div class="t-slot" onclick="selTime(this,'17:00')">17:00</div>
+        <div class="t-slot" onclick="selTime(this,'18:00')">18:00</div>
+        <div class="t-slot" onclick="selTime(this,'19:00')">19:00</div>
+        <div class="t-slot" onclick="selTime(this,'20:00')">20:00</div>
+      </div>
+    </div>
+
+    <div class="pl-section fade-in" style="transition-delay:.36s">
+      <p class="pl-label">programa</p>
+      <div class="cat-tabs" id="cat-tabs">
+        <div class="c-tab act" onclick="setCat(this,'comer')">comer</div>
+        <div class="c-tab" onclick="setCat(this,'beber')">beber</div>
+        <div class="c-tab" onclick="setCat(this,'explorar')">explorar</div>
+        <div class="c-tab" onclick="setCat(this,'relaxar')">relaxar</div>
+      </div>
+      <div class="pl-grid" id="places-grid"></div>
+    </div>
+
+    <div class="pl-section fade-in" style="transition-delay:.44s">
+      <p class="pl-label">nota ou sugestão</p>
+      <textarea class="comment-ta" id="comment-ta" rows="3" placeholder="escreve aqui o que quiseres — uma ideia, uma preferência, ou apenas um pensamento..."></textarea>
+    </div>
+
+    <div class="summary" id="summary">
+      <p class="sum-lbl">// o teu encontro</p>
+      <p class="sum-line" id="sum-date"></p>
+      <p class="sum-line" id="sum-time"></p>
+      <p class="sum-line" id="sum-places"></p>
+      <button class="conf-btn" id="conf-btn" onclick="confirmDate()">confirmar encontro →</button>
+    </div>
+
+    <div class="confirmed" id="confirmed">
+      <h3>Perfeito.<br><em>Então está marcado.</em></h3>
+      <p>Recebi a tua escolha. Fico à espera.</p>
+      <br>
+      <small>— elton messias · 873 549 922</small>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: CONTACTO -->
+<div class="page" id="page-contacto">
+  <div class="contacto-wrap">
+    <p class="contacto-eyebrow fade-in">// 03 — contacto</p>
+    <h2 class="contacto-heading fade-in" style="transition-delay:.1s">
+      Se quiseres<br>dar o <span>próximo passo,</span><br>estou aqui.
+    </h2>
+    <div class="fade-in" style="transition-delay:.2s">
+      <div class="c-item">
+        <span class="c-icon">telefone</span>
+        <div>
+          <div class="c-val">873 549 922</div>
+          <div class="c-note">whatsapp ou chamada — o que preferires</div>
+        </div>
+      </div>
+      <div class="c-item">
+        <span class="c-icon">e-mail</span>
+        <div>
+          <div class="c-val">eltonguambe1006@gmail.com</div>
+          <div class="c-note">para quando uma mensagem não chega</div>
+        </div>
+      </div>
+      <div class="c-item" style="border-bottom:none;">
+        <span class="c-icon">faculdade</span>
+        <div>
+          <div class="c-val">Engenharia Informática</div>
+          <!-- <div class="c-note"> raramente apareço · mas estou cá</div> -->
+        </div>
+      </div>
+    </div>
+    <div class="contacto-footer fade-in" style="transition-delay:.3s;">
+      criado a 03.06.2025 · feito especificamente para ti<br>
+      <span style="color:#1a1915;">· · ·</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ADMIN -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <h2 class="admin-title">Painel do Elton</h2>
+    <p class="admin-sub">// encontros marcados por ela</p>
+    <div id="admin-content"></div>
+  </div>
+</div>
+
+<script>
+const PWD_GIRL  = "electrica";
+const PWD_ADMIN = "elton2025";
+const EMAILJS_PK  = "-fFywLCSJUEOb6vlS";
+const EMAILJS_SVC = "service_gjitbml";
+const EMAILJS_TPL = "template_68xjlhi";
+
+emailjs.init(EMAILJS_PK);
+
+const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+const PLACES={
+  comer:[
+    {name:"Pizza",desc:"clássica e reconfortante",img:"https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=300&q=70"},
+    {name:"Burgers",desc:"suculentas, sem cerimónia",img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&q=70"},
+    {name:"Sushi",desc:"delicado e surpreendente",img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=300&q=70"},
+    {name:"Grelhados",desc:"simples e muito bom",img:"https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=300&q=70"},
+    {name:"Pastelaria",desc:"leve, para conversar",img:"https://images.unsplash.com/photo-1612182913323-45e8f5936fd4?w=300&q=70"},
+    {name:"Mariscos",desc:"quando há motivo para celebrar",img:"https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=300&q=70"},
+  ],
+  beber:[
+    {name:"Café",desc:"simples e essencial",img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=70"},
+    {name:"Cocktails",desc:"para as noites que pedem isso",img:"https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=300&q=70"},
+    {name:"Sumos naturais",desc:"fresco e saudável",img:"https://images.unsplash.com/photo-1622597467836-f3e7d610bd21?w=300&q=70"},
+    {name:"Cerveja artesanal",desc:"descontraído e animado",img:"https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=300&q=70"},
+  ],
+  explorar:[
+    {name:"Museu",desc:"cultura e conversa garantidas",img:"https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=300&q=70"},
+    {name:"Mercado",desc:"vivo, colorido, autêntico",img:"https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=300&q=70"},
+    {name:"Beira-mar",desc:"ar fresco e sem pressa",img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=70"},
+    {name:"Parque",desc:"verde, calmo, à vontade",img:"https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=300&q=70"},
+    {name:"Galeria de arte",desc:"quando as palavras ficam pequenas",img:"https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=300&q=70"},
+  ],
+  relaxar:[
+    {name:"Cinema",desc:"bom filme, boa companhia",img:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&q=70"},
+    {name:"Livraria",desc:"silêncio produtivo",img:"https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&q=70"},
+    {name:"Pôr do sol",desc:"sem plano, só o momento",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=300&q=70"},
+    {name:"Jogo de tabuleiro",desc:"competitivo mas simpático",img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&q=70"},
+  ]
+};
+
+let curPage='lock';
+let curCat='comer',selDate=null,selTimeVal=null,selPlaces=[];
+let curMonth=new Date().getMonth(),curYear=new Date().getFullYear();
+
+function goTo(page){
+  const old=document.getElementById('page-'+curPage);
+  const next=document.getElementById('page-'+page);
+  if(!next||page===curPage)return;
+  old.classList.remove('active');
+  old.classList.add('exit-up');
+  setTimeout(()=>old.classList.remove('exit-up'),700);
+  next.classList.add('active');
+  next.querySelectorAll('.fade-in').forEach((el,i)=>{
+    el.classList.remove('in');
+    setTimeout(()=>el.classList.add('in'),60+i*90);
+  });
+  curPage=page;
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const map={home:0,carta:1,planner:2,contacto:3};
+  const links=document.querySelectorAll('.nav-link');
+  if(map[page]!==undefined)links[map[page]].classList.add('active');
+  if(page==='planner'){renderCalendar();renderPlaces();}
+}
+
+function checkPwd(){
+  const v=document.getElementById('pwd').value.trim().toLowerCase();
+  const err=document.getElementById('pwd-err');
+  if(v===PWD_GIRL){
+    err.classList.remove('show');
+    document.getElementById('nav').style.display='flex';
+    goTo('home');
+  } else if(v===PWD_ADMIN){
+    err.classList.remove('show');
+    document.getElementById('nav').style.display='flex';
+    renderAdmin();
+    goTo('admin');
+  } else {
+    err.classList.add('show');
+    document.getElementById('pwd').value='';
+    document.getElementById('pwd').focus();
+  }
+}
+
+function sair(){
+  document.getElementById('nav').style.display='none';
+  const old=document.getElementById('page-'+curPage);
+  old.classList.remove('active');
+  document.getElementById('page-lock').classList.add('active');
+  curPage='lock';
+  document.getElementById('pwd').value='';
+  document.getElementById('pwd-err').classList.remove('show');
+}
+
+function renderCalendar(){
+  document.getElementById('cal-month-label').textContent=MONTHS[curMonth]+' '+curYear;
+  const grid=document.getElementById('cal-grid');
+  grid.querySelectorAll('.cal-day').forEach(d=>d.remove());
+  const first=new Date(curYear,curMonth,1).getDay();
+  const days=new Date(curYear,curMonth+1,0).getDate();
+  const today=new Date();
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cal-day emp';grid.appendChild(e);}
+  for(let d=1;d<=days;d++){
+    const div=document.createElement('div');div.className='cal-day';div.textContent=d;
+    const dt=new Date(curYear,curMonth,d);
+    if(dt<new Date(today.getFullYear(),today.getMonth(),today.getDate())){div.classList.add('past');}
+    else{
+      if(today.getDate()===d&&today.getMonth()===curMonth&&today.getFullYear()===curYear)div.classList.add('tod');
+      if(selDate&&selDate.d===d&&selDate.m===curMonth&&selDate.y===curYear)div.classList.add('sel');
+      div.onclick=()=>selDay(div,d);
+    }
+    grid.appendChild(div);
+  }
+}
+
+function selDay(el,d){
+  document.querySelectorAll('.cal-day.sel').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');selDate={d,m:curMonth,y:curYear};updateSum();
+}
+
+function changeMonth(dir){
+  curMonth+=dir;
+  if(curMonth>11){curMonth=0;curYear++;}
+  if(curMonth<0){curMonth=11;curYear--;}
+  renderCalendar();
+}
+
+function selTime(el,t){
+  document.querySelectorAll('.t-slot.sel').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');selTimeVal=t;updateSum();
+}
+
+function setCat(el,cat){
+  document.querySelectorAll('.c-tab').forEach(x=>x.classList.remove('act'));
+  el.classList.add('act');curCat=cat;renderPlaces();
+}
+
+function renderPlaces(){
+  const grid=document.getElementById('places-grid');grid.innerHTML='';
+  PLACES[curCat].forEach(p=>{
+    const card=document.createElement('div');
+    card.className='pl-card'+(selPlaces.includes(p.name)?' sel':'');
+    card.innerHTML=`<img class="pl-img" src="${p.img}" alt="${p.name}" loading="lazy"><p class="pl-name">${p.name}</p><p class="pl-desc">${p.desc}</p>`;
+    card.onclick=()=>togglePlace(card,p.name);
+    grid.appendChild(card);
+  });
+}
+
+function togglePlace(card,name){
+  const idx=selPlaces.indexOf(name);
+  if(idx===-1){selPlaces.push(name);card.classList.add('sel');}
+  else{selPlaces.splice(idx,1);card.classList.remove('sel');}
+  updateSum();
+}
+
+function updateSum(){
+  const box=document.getElementById('summary');
+  if(!selDate&&!selTimeVal&&selPlaces.length===0){box.classList.remove('vis');return;}
+  box.classList.add('vis');
+  document.getElementById('sum-date').innerHTML=selDate?`<span>data —</span> ${selDate.d} de ${MONTHS[selDate.m]}, ${selDate.y}`:'';
+  document.getElementById('sum-time').innerHTML=selTimeVal?`<span>hora —</span> ${selTimeVal}`:'';
+  document.getElementById('sum-places').innerHTML=selPlaces.length>0?`<span>programa —</span> ${selPlaces.join(', ')}`:'';
+}
+
+async function confirmDate(){
+  if(!selDate||!selTimeVal||selPlaces.length===0){alert('Escolhe uma data, uma hora e pelo menos um programa.');return;}
+  const btn=document.getElementById('conf-btn');
+  btn.disabled=true;btn.textContent='a enviar...';
+  const comment=document.getElementById('comment-ta').value.trim();
+  const booking={
+    date:`${selDate.d} de ${MONTHS[selDate.m]}, ${selDate.y}`,
+    time:selTimeVal,
+    places:selPlaces.join(', '),
+    comment:comment||'—',
+    timestamp:new Date().toLocaleString('pt-PT')
+  };
+  try{const ex=JSON.parse(localStorage.getItem('elton_bookings')||'[]');ex.push(booking);localStorage.setItem('elton_bookings',JSON.stringify(ex));}catch(e){}
+  try{
+    await emailjs.send(EMAILJS_SVC,EMAILJS_TPL,{
+      to_name:"Elton",date:booking.date,time:booking.time,
+      places:booking.places,comment:booking.comment,timestamp:booking.timestamp,
+      message:`Ela marcou um encontro!\n\nData: ${booking.date}\nHora: ${booking.time}\nPrograma: ${booking.places}\nNota: ${booking.comment}\n\nEm: ${booking.timestamp}`
+    });
+  }catch(e){console.warn('EmailJS:',e);}
+  document.getElementById('summary').classList.remove('vis');
+  document.getElementById('confirmed').classList.add('vis');
+}
+
+function renderAdmin(){
+  const content=document.getElementById('admin-content');
+  let bk=[];try{bk=JSON.parse(localStorage.getItem('elton_bookings')||'[]');}catch(e){}
+  if(bk.length===0){content.innerHTML='<p class="admin-empty">ainda nenhum encontro marcado.</p>';return;}
+  content.innerHTML=bk.map(b=>`
+    <div class="b-card">
+      <div class="b-row"><span class="b-lbl">data</span><span class="b-val">${b.date}</span></div>
+      <div class="b-row"><span class="b-lbl">hora</span><span class="b-val">${b.time}</span></div>
+      <div class="b-row"><span class="b-lbl">programa</span><span class="b-val">${b.places}</span></div>
+      ${b.comment&&b.comment!=='—'?`<div class="b-row"><span class="b-lbl">nota</span><span class="b-comment">"${b.comment}"</span></div>`:''}
+      <p class="b-time"><span class="b-dot"></span>marcado em ${b.timestamp}</p>
+    </div>
+  `).reverse().join('');
+}
+
+document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')checkPwd();});
+</script>
+</body>
+</html>
