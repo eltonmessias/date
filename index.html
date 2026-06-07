@@ -24,6 +24,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 .nav-sair{font-family:'DM Mono',monospace;font-size:.55rem;color:#3a3530;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:1px solid #2a2520;padding:.3rem .8rem;transition:all .25s;}
 .nav-sair:hover{color:#8a4a3a;border-color:#5a3030;}
 
+/* LOCK */
 #page-lock{background:#080806;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
 #page-lock::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 40% 40%,rgba(138,122,96,.06) 0%,transparent 65%);pointer-events:none;}
 .lock-glyph{font-family:'DM Mono',monospace;font-size:1.1rem;color:#2a2520;letter-spacing:.5em;margin-bottom:3rem;animation:pulse 4s ease-in-out infinite;}
@@ -39,6 +40,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 .pwd-err{font-family:'DM Mono',monospace;font-size:.6rem;color:#7a3a2a;letter-spacing:.1em;opacity:0;transition:opacity .3s;height:.8rem;}
 .pwd-err.show{opacity:1;}
 
+/* HOME */
 #page-home::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(138,122,96,.05) 0%,transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(100,90,70,.04) 0%,transparent 50%);pointer-events:none;}
 .home-wrap{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:5rem 2.5rem 3rem;max-width:720px;margin:0 auto;}
 .home-eyebrow{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.25em;text-transform:uppercase;margin-bottom:2.5rem;display:flex;align-items:center;gap:1rem;}
@@ -59,6 +61,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 .home-stamp{margin-top:5rem;font-family:'DM Mono',monospace;font-size:.55rem;color:#2a2520;letter-spacing:.15em;display:flex;align-items:center;gap:1rem;}
 .home-stamp::after{content:'';flex:1;height:1px;background:#1a1915;}
 
+/* CARTA */
 .carta-wrap{max-width:640px;margin:0 auto;padding:7rem 2.5rem 7rem;}
 .carta-date-tag{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4rem;display:flex;align-items:center;gap:1.5rem;}
 .carta-date-tag::before{content:'';width:20px;height:1px;background:#2a2520;}
@@ -69,7 +72,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 .carta-body strong{color:#c8c4bc;font-weight:400;}
 .carta-pull{border-left:1px solid #1e1d1a;padding:1.4rem 2rem;margin:3.5rem 0;position:relative;}
 .carta-pull::before{content:'';position:absolute;left:-1px;top:0;width:1px;height:50%;background:#8a7a60;}
-.carta-pull p{font-size:1.4rem;font-style:italic;font-weight:300;color:#c8c4bc;line-height:1.75;}
+.carta-pull p{font-size:1.38rem;font-style:italic;font-weight:300;color:#c8c4bc;line-height:1.8;}
 .carta-divider{width:100%;height:1px;background:#141412;margin:3.5rem 0;}
 .carta-sig{margin-top:5rem;display:flex;align-items:baseline;gap:1.5rem;}
 .carta-sig-line{flex:1;height:1px;background:#1a1915;}
@@ -80,11 +83,14 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 .carta-cta span{font-size:1rem;font-style:italic;color:#8a7a60;}
 .carta-cta small{font-family:'DM Mono',monospace;font-size:.6rem;color:#3a3530;letter-spacing:.15em;}
 
+/* SINAL */
 .sinal-wrap{max-width:620px;margin:0 auto;padding:7rem 2.5rem 6rem;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
 .sinal-eyebrow{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.25em;text-transform:uppercase;margin-bottom:2rem;}
 .sinal-heading{font-size:clamp(2rem,5vw,3rem);font-weight:300;font-style:italic;color:#e8e4dc;line-height:1.2;margin-bottom:1rem;}
 .sinal-heading span{color:#8a7a60;}
-.sinal-intro{font-size:1.1rem;font-weight:300;line-height:1.9;color:#5a5248;margin-bottom:3.5rem;font-style:italic;}
+.sinal-intro{font-size:1.15rem;font-weight:300;line-height:1.95;color:#6a6258;margin-bottom:1.5rem;font-style:italic;}
+.sinal-intro em{color:#9a9288;}
+.sinal-intro-2{font-size:1.05rem;font-weight:300;line-height:1.9;color:#4a4540;margin-bottom:3.5rem;font-style:italic;}
 .c-block{margin-bottom:3rem;}
 .c-item{display:flex;align-items:flex-start;gap:1.5rem;padding:1.2rem 0;border-bottom:1px solid #111110;}
 .c-item:first-child{border-top:1px solid #111110;}
@@ -105,9 +111,10 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 .msg-btn:disabled{opacity:.3;cursor:not-allowed;}
 .msg-sent{display:none;margin-top:2rem;padding:1.4rem;border-left:1px solid #8a7a60;background:rgba(138,122,96,.04);}
 .msg-sent.vis{display:block;}
-.msg-sent p{font-size:1.1rem;font-style:italic;color:#c8c4bc;line-height:1.7;}
+.msg-sent p{font-size:1.15rem;font-style:italic;color:#c8c4bc;line-height:1.8;}
 .msg-sent small{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.1em;}
 
+/* ADMIN */
 .admin-wrap{max-width:520px;margin:0 auto;padding:7rem 2rem 5rem;}
 .admin-title{font-size:1.8rem;font-style:italic;font-weight:300;color:#e8e4dc;margin-bottom:.3rem;}
 .admin-sub{font-family:'DM Mono',monospace;font-size:.58rem;color:#3a3530;letter-spacing:.15em;text-transform:uppercase;margin-bottom:2.5rem;}
@@ -153,7 +160,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 <!-- HOME -->
 <div class="page" id="page-home">
   <div class="home-wrap">
-    <div class="home-eyebrow fade-in">03 de Junho, 2026 · 16h00 · Faculdade</div>
+    <div class="home-eyebrow fade-in">03 de Junho, 2026 · 16h00 · quarta-feira</div>
     <h1 class="home-heading fade-in" style="transition-delay:.1s">
       Uma conversa<br>que <span class="gold">não</span> consigo<br><span class="dim">esquecer.</span>
     </h1>
@@ -178,53 +185,61 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 <!-- CARTA -->
 <div class="page" id="page-carta">
   <div class="carta-wrap">
-    <div class="carta-date-tag fade-in">03 · 06 · 2026 — 16h00</div>
+    <div class="carta-date-tag fade-in">03 · 06 · 2026 — 16h00 · quarta-feira</div>
 
     <h2 class="carta-heading fade-in" style="transition-delay:.1s">
-      Há conversas que<br>terminam. E há as que<br><span>ficam abertas.</span>
+      Há conversas que<br>terminam. E há as que<br><span>ficam a fazer barulho.</span>
     </h2>
 
     <p class="carta-body fade-in" style="transition-delay:.2s">
-      Não te conheço. Isso é um facto. Mas há uma coisa estranha que acontece quando duas pessoas se cruzam por acaso e, sem combinarem nada, passam quase uma hora a falar — e nenhuma das duas quer ser a primeira a ir embora.
+      Para ti, provavelmente foi uma conversa normal com um desconhecido numa quarta-feira antes de um teste. Para mim, foi uma daquelas coisas que acontecem e ficam — sem pedir permissão, sem avisar.
     </p>
 
     <p class="carta-body fade-in" style="transition-delay:.28s">
-      Falámos de engenharia, do mercado de trabalho, da realidade do país. De coisas sérias e de coisas sem importância nenhuma. E em algum ponto dessa conversa percebi que estavas a surpreender-me. <em>Não pela razão óbvia.</em> Mas pela forma como pensas. Pela forma como discordas sem ferir. Pela forma como dizes o que pensas sem precisar de permissão para isso.
+      Não te conheço. Mas durante quase uma hora falámos de engenharia, do mercado de trabalho, da realidade do país, de coisas sérias e de coisas completamente sem importância — e em algum ponto desse tempo percebi que estavas a surpreender-me. <em>Não pela razão óbvia.</em> Pela forma como pensas. Pela forma como discordas sem ferir. Pela forma como dizes o que pensas sem pedir licença a ninguém.
     </p>
 
     <div class="carta-pull fade-in" style="transition-delay:.36s">
-      <p>"Existem pessoas que, quando falam, fazem-te sentir que o mundo encolheu um pouco — ficou só aquela conversa, aquele momento. Tu és uma dessas pessoas."</p>
+      <p>"Existem pessoas que, quando falam, fazem o mundo encolher — de repente só existe aquela conversa, aquele momento, aquela pessoa. Tu és uma dessas pessoas. E provavelmente nem sabes."</p>
     </div>
 
     <p class="carta-body fade-in" style="transition-delay:.44s">
-      Quando saí, fui embora com aquela sensação incómoda de quem deixou algo a meio. Como fechar um livro numa página boa e não saber se vai conseguir encontrá-lo outra vez. <em>Não gosto dessa sensação.</em>
+      Lembro-me que naquele dia estavas a preparar-te para um teste de Análise Matemática 3 marcado para sábado. Espero que tenha corrido bem — tens o tipo de cabeça que não deixa um problema por resolver. <em>Isso nota-se.</em>
     </p>
 
     <p class="carta-body fade-in" style="transition-delay:.5s">
-      Por isso fiz isto. Não porque seja a coisa mais normal do mundo — claramente não é. Mas porque a alternativa era esperar por um acaso que podia nunca acontecer. E eu decidi que prefiro ser a pessoa que age do que a pessoa que fica a pensar <em>"e se?"</em> para o resto da vida.
+      Quando saí, fui embora com aquela sensação incómoda de quem deixou algo a meio. Como fechar um livro exactamente numa boa página e não saber se vai voltar a encontrá-lo. Não gosto dessa sensação. Nunca gostei.
     </p>
 
-    <div class="carta-divider fade-in" style="transition-delay:.56s"></div>
+    <p class="carta-body fade-in" style="transition-delay:.56s">
+      Por isso fiz isto. Um engenheiro informático resolve os seus problemas como sabe. Não é a abordagem mais convencional — mas a alternativa era esperar por um acaso que talvez nunca acontecesse. E eu sou da opinião de que as melhores coisas da vida precisam de alguém disposto a fazer algo ligeiramente ridículo para as alcançar.
+    </p>
 
     <p class="carta-body fade-in" style="transition-delay:.62s">
-      Não te estou a pedir nada de grande. Não estou a pedir que respondas agora, nem que sejas simpática por educação. Estou apenas a dizer que <strong>aquela conversa valeu</strong> — e que se tu também achares que valeu, seria muito bom continuar.
+      <em>Considero este site ligeiramente ridículo. E completamente necessário.</em>
     </p>
 
-    <p class="carta-body fade-in" style="transition-delay:.68s">
-      E se não quiseres — tudo bem. Pelo menos ficaste a saber que algures em Maputo existe um engenheiro informático que passou uma tarde de Junho a pensar que te tinha conhecido tarde demais.
+    <div class="carta-divider fade-in" style="transition-delay:.68s"></div>
+
+    <p class="carta-body fade-in" style="transition-delay:.74s">
+      Não te estou a pedir nada de grande. Não preciso que respondas agora, nem que sejas simpática por educação. Estou apenas a dizer que <strong>aquela hora valeu</strong> — e que se tu também achares que valeu, ou se só tiveres curiosidade em saber quem é este engenheiro que construiu um website para te encontrar — a porta está aberta.
     </p>
 
-    <div class="carta-sig fade-in" style="transition-delay:.76s">
+    <p class="carta-body fade-in" style="transition-delay:.8s">
+      E se não quiseres — tudo bem também. Pelo menos ficaste a saber que algures em Maputo existe um engenheiro informático que passou uma tarde de Junho de 2026 a pensar que te tinha conhecido tarde demais. <em>E que achou que valia a pena tentar na mesma.</em>
+    </p>
+
+    <div class="carta-sig fade-in" style="transition-delay:.88s">
       <div class="carta-sig-line"></div>
       <span class="carta-sig-name">Elton Messias</span>
     </div>
 
-    <p class="carta-footnote fade-in" style="transition-delay:.82s">
+    <p class="carta-footnote fade-in" style="transition-delay:.94s">
       escrito a 03 de junho de 2026 · maputo<br>
       criado especificamente para ti · e só para ti
     </p>
 
-    <button class="carta-cta fade-in" style="transition-delay:.88s" onclick="goTo('sinal')">
+    <button class="carta-cta fade-in" style="transition-delay:1s" onclick="goTo('sinal')">
       <span>Um sinal teu</span>
       <small>→</small>
     </button>
@@ -235,14 +250,20 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 <div class="page" id="page-sinal">
   <div class="sinal-wrap">
     <p class="sinal-eyebrow fade-in">// 02 — um sinal teu</p>
+
     <h2 class="sinal-heading fade-in" style="transition-delay:.08s">
-      Se sentiste<br>algo parecido,<br><span>deixa um sinal.</span>
+      Se chegaste até aqui,<br>a conversa pode<br><span>continuar.</span>
     </h2>
+
     <p class="sinal-intro fade-in" style="transition-delay:.16s">
-      Sem compromisso, sem pressão. Se achaste que aquela hora também valeu a pena — fico feliz em saber.
+      Talvez estejas curiosa. Talvez tenhas achado graça. Talvez estejas a pensar <em>"que ideia mais maluca"</em> — e tens razão, é. Mas já que leste até ao fim, deixa-me conhecer-te melhor.
     </p>
 
-    <div class="c-block fade-in" style="transition-delay:.22s">
+    <p class="sinal-intro-2 fade-in" style="transition-delay:.22s">
+      Sem compromisso, sem pressão. Uma mensagem, um número, ou só um olá — o que quiseres. Estou aqui.
+    </p>
+
+    <div class="c-block fade-in" style="transition-delay:.28s">
       <div class="c-item">
         <span class="c-icon">telefone</span>
         <div>
@@ -259,7 +280,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
       </div>
     </div>
 
-    <div class="fade-in" style="transition-delay:.3s">
+    <div class="fade-in" style="transition-delay:.36s">
       <p class="msg-section-label">ou deixa o teu sinal aqui</p>
       <div class="msg-field">
         <input class="msg-input" id="msg-name" type="text" placeholder="o teu nome (opcional)"/>
@@ -268,11 +289,11 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
         <input class="msg-input" id="msg-contact" type="text" placeholder="o teu número ou email (opcional)"/>
       </div>
       <div class="msg-field">
-        <textarea class="msg-ta" id="msg-text" rows="4" placeholder="escreve o que quiseres..."></textarea>
+        <textarea class="msg-ta" id="msg-text" rows="4" placeholder="escreve o que quiseres — uma palavra chega."></textarea>
       </div>
       <button class="msg-btn" id="msg-btn" onclick="sendMsg()">enviar →</button>
       <div class="msg-sent" id="msg-sent">
-        <p>Recebi o teu sinal. <em>Obrigado por teres entrado.</em></p>
+        <p>Recebi. <em>Já estou curioso para continuar.</em></p>
         <br>
         <small>— elton messias · 873 549 922</small>
       </div>
@@ -290,7 +311,7 @@ body{background:#080806;color:#e8e4dc;font-family:'Cormorant Garamond',Georgia,s
 </div>
 
 <script>
-const PWD_GIRL  = "teunome";
+const PWD_GIRL  = "analise3";
 const PWD_ADMIN = "elton2025";
 const EMAILJS_PK  = "-fFywLCSJUEOb6vlS";
 const EMAILJS_SVC = "service_gjitbml";
@@ -351,7 +372,7 @@ async function sendMsg() {
   const name    = document.getElementById('msg-name').value.trim();
   const contact = document.getElementById('msg-contact').value.trim();
   const text    = document.getElementById('msg-text').value.trim();
-  if (!text) { alert('Escreve pelo menos uma mensagem.'); return; }
+  if (!text) { alert('Escreve pelo menos uma palavra.'); return; }
   const btn = document.getElementById('msg-btn');
   btn.disabled = true; btn.textContent = 'a enviar...';
   const entry = {
